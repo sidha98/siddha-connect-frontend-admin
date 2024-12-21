@@ -1,0 +1,22 @@
+.dashboard-container {
+    display: flex;
+    flex-direction: row;
+    min-height: 100vh;
+    width: 100%;
+    transition: all 0.3s ease;  // Smooth transition for resizing
+}
+
+.sidebar-open .main-content {
+    width: calc(100% - 250px);  // Sidebar is open, content shrinks
+}
+
+.sidebar-closed .main-content {
+    width: calc(100% - 60px);   // Sidebar is collapsed, content expands
+}
+
+.main-content {
+    flex: 1;
+    padding: 100px;
+    background-color: #f0f0f0;
+    transition: width 0.3s ease; // Smooth transition when toggling sidebar
+}

@@ -1,0 +1,75 @@
+.dealer-dash-fin-header-main{
+    background-color: #E0E1DD;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 30px 20px 30px 20px;
+    width: 100%;
+    height: 3em;
+
+    p{
+        margin: 0;
+    }
+
+    .fin-header-left{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 1em;
+        width: fit-content;
+
+        .siddha-logo{
+            width: fit-content;
+            img{
+                width: 80px;
+                height: auto;
+            }
+        }
+
+        .dealer-info{
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: flex-start;
+            height: 100%;
+            gap: 0.02em;
+
+            p{
+                font-size: 1em;
+                color: #111111;
+
+                span{
+                    font-size: 0.9em;
+                }
+            }
+        }
+
+        .available-credit-limit{
+            display: flex;
+            flex-direction: column;
+
+            p.acl{
+                font-size: 0.6em;
+            }
+            p.amt{
+                font-size: 1.1em;
+            }
+            p.dt{
+                font-size: 0.6em;
+            }
+
+        }
+    }
+
+    .fin-header-right{
+        display: flex;
+        gap: 0.6em;
+        font-size: 0.8em;
+        width: fit-content;
+
+        a{
+            text-decoration: none;
+            color: #111111;
+        }
+    }
+}
