@@ -25,7 +25,7 @@ function Dashboard({ children }) {
 
     return (
         <div className={`dashboard-container ${isSidebarOpen ? 'sidebar-open' : 'sidebar-closed'}`}>
-            {isLoggedIn && ( // Only render the sidebar if the user is logged in
+            {isLoggedIn && ( // Only render the sidebar if the user is logged in 
                 <Sidebar isSidebarOpen={isSidebarOpen} toggleSidebar={toggleSidebar} />
             )}
             <div className="main-content">
