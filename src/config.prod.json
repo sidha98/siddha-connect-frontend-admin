@@ -1,4 +1,4 @@
 {
-  "frontend_url": "https://siddha-connect-frontend-admin.vercel.app",
-  "backend_url": "https://www.siddhaconnect.com"
+  "frontend_url": "https://siddha-connect-frontend-admin-rho.vercel.app",
+  "backend_url": "https://api.siddhaconnect.com/"
 }
