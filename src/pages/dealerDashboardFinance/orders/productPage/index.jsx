@@ -28,6 +28,7 @@ const ProductPage = () => {
                 },
             });
             setProducts(response.data.products || []);
+            console.log("Products: ", products)
         } catch (error) {
             console.error('Error fetching products:', error);
         }
@@ -57,6 +58,7 @@ const ProductPage = () => {
     // Fetch products whenever filters change
     useEffect(() => {
         fetchProducts();
+        console.log("Products: ", products)
     }, [query, segment, category, minPrice, maxPrice]);
 
     return (
@@ -100,6 +102,9 @@ const ProductPage = () => {
                 {products.map((product) => (
                     <div key={product._id} className="product-card">
                         <img src={samsung_logo} alt="Samsung Logo" className="product-logo" />
+                        <div className="category-tag">
+                            {product.Category.charAt(0).toUpperCase() + product.Category.slice(1)}
+                        </div>
                         <div className="product-info">
                             <h3>{product.Model}</h3>
                             <p>

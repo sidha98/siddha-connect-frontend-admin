@@ -50,15 +50,19 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+    width: 24%;
+    position: relative;
+
 }
 
 .product-logo {
-    max-width: 150px;
+    width: 100%;
     margin-bottom: 10px;
 }
 
 .product-info {
-    text-align: center;
+    text-align: left;
+    width: 100%;
 }
 
 .quantity-container {
@@ -71,4 +75,16 @@
     width: 60px;
     padding: 5px;
     text-align: center;
+}
+
+.category-tag{
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background-color: #62acfc17;
+    color: #000000;
+    padding: 5px 10px 5px 10px;
+    border-radius: 5px;
+    font-size: 0.8em;
+    box-shadow: rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px;
 }
