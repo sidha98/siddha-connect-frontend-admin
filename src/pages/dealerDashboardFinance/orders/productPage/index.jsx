@@ -18,17 +18,20 @@ const ProductPage = () => {
     // Fetch products from API
     const fetchProducts = async () => {
         try {
-            const response = await axios.get(`${backend_url}/product/dealer/all`, {
-                params: {
-                    query: query || undefined,
-                    segment: segment || undefined,
-                    category: category || undefined,
-                    minPrice: minPrice || undefined,
-                    maxPrice: maxPrice || undefined,
-                },
-            });
+            console.log("Filters being sent:", { query, segment, category, minPrice, maxPrice });
+            const response = await axios.post(`${backend_url}/product/dealer/all`, 
+                {
+                    query: query?.trim() || undefined,  // Trim whitespace and send undefined if empty
+                    segment: segment || undefined,     // Send only if segment is not empty
+                    category: category || undefined,   // Send only if category is not empty
+                    minPrice: minPrice ? parseFloat(minPrice) : undefined, // Convert to float if provided
+                    maxPrice: maxPrice ? parseFloat(maxPrice) : undefined, // Convert to float if provided
+                    status: 'live'                     // Default status
+                }
+            );
+            console.log("Response from API:", response.data);
+            console.log("Backend url: ", {backend_url})
             setProducts(response.data.products || []);
-            console.log("Products: ", products)
         } catch (error) {
             console.error('Error fetching products:', error);
         }
@@ -69,7 +72,9 @@ const ProductPage = () => {
                     type="text"
                     placeholder="Search"
                     value={query}
-                    onChange={(e) => setQuery(e.target.value)}
+                    onChange={(e) => {setQuery(e.target.value);
+                        console.log("Query updated:", e.target.value);  }
+                    }
                 />
                 <select value={segment} onChange={(e) => setSegment(e.target.value)}>
                     <option value="">All Segments</option>
