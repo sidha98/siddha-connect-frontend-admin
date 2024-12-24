@@ -1,10 +1,20 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import Modal from 'react-modal';
 import './style.scss'; // Add custom CSS for styling
 import samsung_logo from '../../../../assets/img/samsung logo.png';
 import config from '../../../../config';
+import { FaShoppingCart } from "react-icons/fa";
+import box_icon from "../../../../assets/img/package.png"
+import { AiFillDelete } from "react-icons/ai";
+import { TiDelete } from "react-icons/ti";
+
+
+
 
 const { backend_url } = config;
+
+Modal.setAppElement('#root'); // Set the app root for accessibility
 
 const ProductPage = () => {
     const [products, setProducts] = useState([]);
@@ -14,6 +24,7 @@ const ProductPage = () => {
     const [minPrice, setMinPrice] = useState('');
     const [maxPrice, setMaxPrice] = useState('');
     const [cart, setCart] = useState([]);
+    const [isCartOpen, setIsCartOpen] = useState(false);
 
     // Fetch products from API
     const fetchProducts = async () => {
@@ -21,16 +32,15 @@ const ProductPage = () => {
             console.log("Filters being sent:", { query, segment, category, minPrice, maxPrice });
             const response = await axios.post(`${backend_url}/product/dealer/all`, 
                 {
-                    query: query?.trim() || undefined,  // Trim whitespace and send undefined if empty
-                    segment: segment || undefined,     // Send only if segment is not empty
-                    category: category || undefined,   // Send only if category is not empty
-                    minPrice: minPrice ? parseFloat(minPrice) : undefined, // Convert to float if provided
-                    maxPrice: maxPrice ? parseFloat(maxPrice) : undefined, // Convert to float if provided
-                    status: 'live'                     // Default status
+                    query: query?.trim() || undefined,
+                    segment: segment || undefined,
+                    category: category || undefined,
+                    minPrice: minPrice ? parseFloat(minPrice) : undefined,
+                    maxPrice: maxPrice ? parseFloat(maxPrice) : undefined,
+                    status: 'live'
                 }
             );
             console.log("Response from API:", response.data);
-            console.log("Backend url: ", {backend_url})
             setProducts(response.data.products || []);
         } catch (error) {
             console.error('Error fetching products:', error);
@@ -48,6 +58,11 @@ const ProductPage = () => {
         }
     };
 
+    // Remove item from cart
+    const removeFromCart = (productId) => {
+        setCart(cart.filter((item) => item._id !== productId));
+    };
+
     // Reset Filters
     const resetFilters = () => {
         setQuery('');
@@ -55,13 +70,12 @@ const ProductPage = () => {
         setCategory('');
         setMinPrice('');
         setMaxPrice('');
-        fetchProducts(); // Ensure products are refreshed after reset
+        fetchProducts();
     };
 
     // Fetch products whenever filters change
     useEffect(() => {
         fetchProducts();
-        console.log("Products: ", products)
     }, [query, segment, category, minPrice, maxPrice]);
 
     return (
@@ -72,9 +86,7 @@ const ProductPage = () => {
                     type="text"
                     placeholder="Search"
                     value={query}
-                    onChange={(e) => {setQuery(e.target.value);
-                        console.log("Query updated:", e.target.value);  }
-                    }
+                    onChange={(e) => setQuery(e.target.value)}
                 />
                 <select value={segment} onChange={(e) => setSegment(e.target.value)}>
                     <option value="">All Segments</option>
@@ -130,7 +142,7 @@ const ProductPage = () => {
                                         addToCart(product, product.quantity || 1)
                                     }
                                 >
-                                    Add to Cart
+                                    Add to Order
                                 </button>
                             </div>
                         </div>
@@ -138,10 +150,46 @@ const ProductPage = () => {
                 ))}
             </div>
 
-            {/* Cart Counter */}
-            <div className="cart-counter">
-                <p>Cart: {cart.reduce((total, item) => total + item.quantity, 0)} items</p>
+            {/* Floating Cart Icon */}
+            <div className="floating-cart" onClick={() => setIsCartOpen(true)}>
+               <div className="box-icon">
+                    <img src={box_icon} alt="" />
+                    <div className="cart-count">
+                        {cart.reduce((total, item) => total + item.quantity, 0)}
+                    </div>
+               </div>
+
+                
             </div>
+
+            {/* Cart Modal */}
+            <Modal
+                isOpen={isCartOpen}
+                onRequestClose={() => setIsCartOpen(false)}
+                className="cart-modal"
+                overlayClassName="cart-overlay"
+            >
+                <h2>Order</h2>
+                <div className="cart-item-wrapper">
+                    {cart.length > 0 ? (
+                        cart.map((item) => (
+                            <div key={item._id} className="cart-item">
+                                <span>{item.Model} x {item.quantity}</span>
+                                <span> {item.Price} INR</span>
+                                <button class="remove-from-cart-btn" onClick={() => removeFromCart(item._id)}><AiFillDelete /></button>
+                            </div>
+                        ))
+                    ) : (
+                        <p>Your box is empty</p>
+                    )}
+                </div>
+
+
+                <div className="cart-modal-btns">
+                    <button class="place-order-btn" onClick={() => setIsCartOpen(false)}>Place Order</button>
+                </div>
+                <button class="close-cart-modal" onClick={() => setIsCartOpen(false)}><TiDelete /></button>
+            </Modal>
         </div>
     );
 };
