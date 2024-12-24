@@ -179,15 +179,18 @@ const ProductPage = () => {
                                 <button class="remove-from-cart-btn" onClick={() => removeFromCart(item._id)}><AiFillDelete /></button>
                             </div>
                         ))
+                        
                     ) : (
                         <p>Your box is empty</p>
                     )}
                 </div>
 
-
+                {cart.length > 0 ? (
                 <div className="cart-modal-btns">
                     <button class="place-order-btn" onClick={() => setIsCartOpen(false)}>Place Order</button>
                 </div>
+                ) : <></>}
+
                 <button class="close-cart-modal" onClick={() => setIsCartOpen(false)}><TiDelete /></button>
             </Modal>
         </div>
