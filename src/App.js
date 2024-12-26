@@ -15,6 +15,7 @@ import ExtractionGraphs from './pages/extractionGraphs';
 import ExtractionModelWise from './pages/extractionModelWise';
 import DealerDashboardFinance from './pages/dealerDashboardFinance';
 import ProductPage from './pages/dealerDashboardFinance/orders/productPage';
+import { UserProvider } from './context/userContext';
 
 
 function AppRoutes() {
@@ -60,9 +61,11 @@ function AppRoutes() {
 function App() {
     return (
         <AuthProvider>
-            <Router>
-                <AppRoutes />
-            </Router>
+            <UserProvider>
+                <Router>
+                    <AppRoutes />
+                </Router>
+            </UserProvider>
         </AuthProvider>
     );
 }

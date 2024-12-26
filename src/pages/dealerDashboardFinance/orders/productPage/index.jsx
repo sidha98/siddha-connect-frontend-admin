@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import axios from "axios";
 import Modal from "react-modal";
+import { Navigate, useNavigate } from "react-router-dom";
 import "./style.scss"; // Add custom CSS for styling
 import samsung_logo from "../../../../assets/img/samsung logo.png";
 import config from "../../../../config";
@@ -8,6 +9,8 @@ import { FaShoppingCart } from "react-icons/fa";
 import box_icon from "../../../../assets/img/package.png";
 import { AiFillDelete } from "react-icons/ai";
 import { TiDelete } from "react-icons/ti";
+import { UserContext } from "../../../../context/userContext";
+import { jwtDecode } from "jwt-decode";
 
 const { backend_url } = config;
 
@@ -22,6 +25,9 @@ const ProductPage = () => {
   const [maxPrice, setMaxPrice] = useState("");
   const [cart, setCart] = useState([]);
   const [isCartOpen, setIsCartOpen] = useState(false);
+  const { user } = useContext(UserContext);
+  const navigate = useNavigate();
+
 
   // Fetch products from API
   const fetchProducts = async () => {
@@ -89,6 +95,65 @@ const ProductPage = () => {
     setCart(updatedCart);
   };
 
+    // Create Order
+    const handlePlaceOrder = async () => {
+        if (cart.length === 0) {
+          alert("Your cart is empty!");
+          return;
+        }
+      
+        try {
+          // Retrieve the token from localStorage
+          const token = localStorage.getItem("token");
+      
+          if (!token) {
+            alert("You are not authenticated. Please log in again.");
+            return;
+          }
+      
+          // Decode the token to extract dealer information
+          const decodedToken = jwtDecode(token);
+          const dealerCode = decodedToken.dealerCode;
+          const dealerName = decodedToken.shopName;
+      
+          if (!dealerCode || !dealerName) {
+            alert("Invalid dealer information in token. Please contact support.");
+            return;
+          }
+      
+          // Prepare products data for the order
+          const productsForOrder = cart.map((item) => ({
+            ProductId: item._id,
+            Quantity: item.quantity,
+            Price: item.Price,
+          }));
+      
+          // Make the API call to create the order
+          const response = await axios.post(
+            `${backend_url}/dealer/create-order`,
+            {
+              DealerCode: dealerCode,
+              DealerName: dealerName,
+              products: productsForOrder,
+            },
+            {
+              headers: {
+                Authorization: `Bearer ${token}`, // Include the token in the Authorization header
+              },
+            }
+          );
+      
+          alert("Order placed successfully!");
+          setCart([]);
+          setIsCartOpen(false);
+          navigate("/orders");
+        } catch (error) {
+          console.error("Error placing order:", error.message || error.response?.data || error);
+          alert("Failed to place order. Please try again.");
+        }
+      };
+      
+
   // Fetch products whenever filters change
   useEffect(() => {
     fetchProducts();
@@ -130,87 +195,47 @@ const ProductPage = () => {
         <button onClick={resetFilters}>Reset Filters</button>
       </div>
 
-      {/* Products Section */}
-      {/* <div className="products-container">
+        <div className="products-container">
         {products.map((product) => (
-          <div key={product._id} className="product-card">
-            <img
-              src={samsung_logo}
-              alt="Samsung Logo"
-              className="product-logo"
-            />
-            <div className="category-tag">
-              {product.Category.charAt(0).toUpperCase() +
-                product.Category.slice(1)}
+            <div key={product._id} className="product-card">
+            <div className="product-image-wrapper">
+                <img
+                src={samsung_logo}
+                alt={`${product.Model} Logo`}
+                className="product-logo"
+                />
+                <span className="category-tag">
+                {product.Category.charAt(0).toUpperCase() +
+                    product.Category.slice(1)}
+                </span>
             </div>
             <div className="product-info">
-              <h3>{product.Model}</h3>
-              <p>
-                {product.ProductCode} | {product.Price} INR
-              </p>
-              <div className="quantity-container">
+                <h3 className="product-name">{product.Model}</h3>
+                <p className="product-details">
+                Code: {product.ProductCode} <br />
+                Price: {product.Price} INR
+                </p>
+                <div className="quantity-container">
                 <input
-                  type="number"
-                  defaultValue={1}
-                  min={1}
-                  onChange={(e) => {
+                    type="number"
+                    defaultValue={1}
+                    min={1}
+                    onChange={(e) => {
                     product.quantity = parseInt(e.target.value) || 1;
-                  }}
-                  className="quantity-input"
+                    }}
+                    className="quantity-input"
                 />
                 <button
-                  onClick={() => addToCart(product, product.quantity || 1)}
+                    onClick={() => addToCart(product, product.quantity || 1)}
+                    className="add-to-order-btn"
                 >
-                  Add to Order
+                    Add to Order
                 </button>
-              </div>
+                </div>
             </div>
-          </div>
+            </div>
         ))}
-      </div> */}
-{/* nameeeraaaaaaa */}
-
-<div className="products-container">
-  {products.map((product) => (
-    <div key={product._id} className="product-card">
-      <div className="product-image-wrapper">
-        <img
-          src={samsung_logo}
-          alt={`${product.Model} Logo`}
-          className="product-logo"
-        />
-        <span className="category-tag">
-          {product.Category.charAt(0).toUpperCase() +
-            product.Category.slice(1)}
-        </span>
-      </div>
-      <div className="product-info">
-        <h3 className="product-name">{product.Model}</h3>
-        <p className="product-details">
-          Code: {product.ProductCode} <br />
-          Price: {product.Price} INR
-        </p>
-        <div className="quantity-container">
-          <input
-            type="number"
-            defaultValue={1}
-            min={1}
-            onChange={(e) => {
-              product.quantity = parseInt(e.target.value) || 1;
-            }}
-            className="quantity-input"
-          />
-          <button
-            onClick={() => addToCart(product, product.quantity || 1)}
-            className="add-to-order-btn"
-          >
-            Add to Order
-          </button>
         </div>
-      </div>
-    </div>
-  ))}
-</div>
 
       {/* Floating Cart Icon */}
       <div className="floating-cart" onClick={() => setIsCartOpen(true)}>
@@ -222,41 +247,6 @@ const ProductPage = () => {
         </div>
       </div>
 
-      {/* Cart Modal */}
-
-      {/* Rakshitaaa */}
-      {/* <Modal
-                isOpen={isCartOpen}
-                onRequestClose={() => setIsCartOpen(false)}
-                className="cart-modal"
-                overlayClassName="cart-overlay"
-            >
-                <h2>Order</h2>
-                <div className="cart-item-wrapper">
-                    {cart.length > 0 ? (
-                        cart.map((item) => (
-                            <div key={item._id} className="cart-item">
-                                <span>{item.Model} x {item.quantity}</span>
-                                <span> {item.Price} INR</span>
-                                <button class="remove-from-cart-btn" onClick={() => removeFromCart(item._id)}><AiFillDelete /></button>
-                            </div>
-                        ))
-                        
-                    ) : (
-                        <p>Your box is empty</p>
-                    )}
-                </div>
-
-                {cart.length > 0 ? (
-                <div className="cart-modal-btns">
-                    <button class="place-order-btn" onClick={() => setIsCartOpen(false)}>Place Order</button>
-                </div>
-                ) : <></>}
-
-                <button class="close-cart-modal" onClick={() => setIsCartOpen(false)}><TiDelete /></button>
-            </Modal> */}
-
-      {/* Nameera */}
       <Modal
         isOpen={isCartOpen}
         onRequestClose={() => setIsCartOpen(false)}
@@ -306,7 +296,7 @@ const ProductPage = () => {
               )}{" "}
               INR
             </div>
-            <button className="place-order-btn">Place Order</button>
+            <button className="place-order-btn" onClick={handlePlaceOrder}>Place Order</button>
           </div>
         )}
 
