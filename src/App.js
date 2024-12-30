@@ -16,6 +16,7 @@ import ExtractionModelWise from './pages/extractionModelWise';
 import DealerDashboardFinance from './pages/dealerDashboardFinance';
 import ProductPage from './pages/dealerDashboardFinance/orders/productPage';
 import { UserProvider } from './context/userContext';
+import Orders from './pages/orders';
 
 
 function AppRoutes() {
@@ -23,7 +24,7 @@ function AppRoutes() {
     const dealerRoutesFinance = [
         "/dealer-dashboard/finance",
         "/dealer-dashboard/orders/products",
-        "/dealer-dashboard/finance/orders/products/som"
+        "/products"
     ];
     
     const isDealerFinanceDash = dealerRoutesFinance.includes(location.pathname);
@@ -34,7 +35,7 @@ function AppRoutes() {
             <DealerDashboardFinance>
                 <Routes>
                     <Route path="/dealer-dashboard/finance" element={<PrivateRoute element={DealerDashboardFinance} />} />
-                    <Route path="/dealer-dashboard/orders/products" element={<PrivateRoute element={ProductPage} /> } />
+                    <Route path="/products" element={<PrivateRoute element={ProductPage} /> } />
                 </Routes>
             </DealerDashboardFinance>
         ) : (
@@ -49,6 +50,7 @@ function AppRoutes() {
                     <Route path="/extraction-overview" element={<PrivateRoute element={ExtractionOverview} />} />
                     <Route path="/extraction-graphs" element={<PrivateRoute element={ExtractionGraphs} />} />
                     <Route path="/extraction-model-wise" element={<PrivateRoute element={ExtractionModelWise} /> } />
+                    <Route path="/orders" element={<PrivateRoute element={Orders} /> } />
                     <Route path="/logout" element={<Logout />} />
                 </Routes>
             </Dashboard>
@@ -71,3 +73,4 @@ function App() {
 }
 
 export default App;
+ 
