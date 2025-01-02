@@ -17,46 +17,48 @@ import DealerDashboardFinance from './pages/dealerDashboardFinance';
 import ProductPage from './pages/dealerDashboardFinance/orders/productPage';
 import { UserProvider } from './context/userContext';
 import Orders from './pages/orders';
+import Layout from './pages/layout';
 
 
 function AppRoutes() {
     const location = useLocation();
-    const dealerRoutesFinance = [
-        "/dealer-dashboard/finance",
-        "/dealer-dashboard/orders/products",
-        "/products"
-    ];
+    // const dealerRoutesFinance = [
+    //     "/dealer-dashboard/finance",
+    //     "/dealer-dashboard/orders/products",
+    //     "/products"
+    // ];
     
-    const isDealerFinanceDash = dealerRoutesFinance.includes(location.pathname);
+    // const isDealerFinanceDash = dealerRoutesFinance.includes(location.pathname);
 
     return (
-        <>
-        {isDealerFinanceDash ? (
-            <DealerDashboardFinance>
-                <Routes>
-                    <Route path="/dealer-dashboard/finance" element={<PrivateRoute element={DealerDashboardFinance} />} />
-                    <Route path="/products" element={<PrivateRoute element={ProductPage} /> } />
-                </Routes>
-            </DealerDashboardFinance>
-        ) : (
-            <Dashboard>
-                <Routes>
-                    <Route path="/login" element={<Login />} />
-                    <Route path="/dealer-dashboard/finance" element={<PrivateRoute element={ DealerDashboardFinance } />} />
-                    <Route path="/brand-comparison" element={<PrivateRoute element={BrandComparison} />} />
-                    <Route path="/dealer-performance" element={<PrivateRoute element={DealerPerformance} />} />
-                    <Route path="/segment-analysis" element={<PrivateRoute element={SegmentAnalysis} />} />
-                    <Route path="/extraction-report" element={<PrivateRoute element={ExtractionReport} />} />
-                    <Route path="/extraction-overview" element={<PrivateRoute element={ExtractionOverview} />} />
-                    <Route path="/extraction-graphs" element={<PrivateRoute element={ExtractionGraphs} />} />
-                    <Route path="/extraction-model-wise" element={<PrivateRoute element={ExtractionModelWise} /> } />
-                    <Route path="/orders" element={<PrivateRoute element={Orders} /> } />
-                    <Route path="/logout" element={<Logout />} />
-                </Routes>
-            </Dashboard>
-        )}
-        </>
-    )
+        <Routes>
+            {/* Login Page Route */}
+            <Route path="/login" element={<Login />} />
+
+            {/* Protected Routes with Layout */}
+            <Route
+                path="/"
+                element={
+                    <PrivateRoute
+                        element={() => <Layout />} // Layout wraps all protected routes
+                    />
+                }
+            >
+                {/* Child Routes */}
+                <Route path="/dealer-dashboard/finance" element={<DealerDashboardFinance />} />
+                <Route path="/products" element={<ProductPage />} />
+                <Route path="/orders" element={<Orders />} />
+                <Route path="/brand-comparison" element={<BrandComparison />} />
+                <Route path="/dealer-performance" element={<DealerPerformance />} />
+                <Route path="/segment-analysis" element={<SegmentAnalysis />} />
+                <Route path="/extraction-report" element={<ExtractionReport />} />
+                <Route path="/extraction-overview" element={<ExtractionOverview />} />
+                <Route path="/extraction-graphs" element={<ExtractionGraphs />} />
+                <Route path="/extraction-model-wise" element={<ExtractionModelWise />} />
+                <Route path="/logout" element={<Logout />} />
+            </Route>
+        </Routes>
+    );
 }
 
 
