@@ -1,4 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Anton&display=swap');
+body{
+    line-height: unset !important;
+}
 .dih-main{
     display: flex;
     flex-direction: column;
@@ -21,7 +24,7 @@
     }
     .limit-avail{
         p{
-            font-size: 1.9em;
+            font-size: 1.8em;
             color: #f7501b;
             font-family: "Anton", serif;
             font-weight: 400;
