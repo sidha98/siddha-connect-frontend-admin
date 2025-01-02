@@ -1,0 +1,44 @@
+@import url('https://fonts.googleapis.com/css2?family=Anton&display=swap');
+.dih-main{
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    width: fit-content;
+    align-items: flex-end;
+    padding: 10px;
+    line-height: unset;
+
+    p{
+        margin-block-end: unset;
+        margin-block-start: unset;
+    }
+
+    .avail-limit-head{
+        p{
+            font-size: 0.7em;
+            color: rgb(83, 83, 83);
+        }
+    }
+    .limit-avail{
+        p{
+            font-size: 1.9em;
+            color: #f7501b;
+            font-family: "Anton", serif;
+            font-weight: 400;
+            font-style: normal;
+
+            // font-weight: bold;
+        }
+    }
+    .date-time-limit{
+        p{
+            font-size: 0.7em;
+            color: gray;
+        }
+    }
+
+
+
+
+
+}

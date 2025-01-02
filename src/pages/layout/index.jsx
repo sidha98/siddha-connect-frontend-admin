@@ -10,6 +10,7 @@ import { AppBar, Toolbar, Typography, IconButton, Stack, Tooltip } from '@mui/ma
 // import ThemeSwitcher from '@toolpad/core/ThemeSwitcher';
 import SearchIcon from '@mui/icons-material/Search';
 import siddha_logo from '../../assets/img/siddha_corp_crop_.png';
+import DealerInfoForHeader from '../components/dealerInfoForHeader';
 
 const NAVIGATION = [
   { segment: 'dashboard', title: 'Dashboard', icon: <DashboardIcon /> },
@@ -46,11 +47,12 @@ function CustomHeader() {
 function ToolbarActions() {
   return (
     <Stack direction="row" spacing={2}>
-      <Tooltip title="Search" enterDelay={1000}>
+      {/* <Tooltip title="Search" enterDelay={1000}>
         <IconButton aria-label="search">
           <SearchIcon />
         </IconButton>
-      </Tooltip>
+      </Tooltip> */}
+      <DealerInfoForHeader />
       {/* <ThemeSwitcher /> */}
     </Stack>
   );
@@ -74,10 +76,6 @@ export default function Layout() {
     branding={{
       logo: <img src={siddha_logo} alt="MUI logo" />,
       title: <>
-        <div className="dealer-details">
-          <p>Satyam Electronics</p>
-          {/* <p>RJ069125</p> */}
-        </div>
       </>,
       homeUrl: '/toolpad/core/introduction',
     }}
