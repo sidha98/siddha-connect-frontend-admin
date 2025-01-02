@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import jwtDecode from "jwt-decode";
 import "./style.scss";
 import config from "../../../config";
 
@@ -10,6 +9,7 @@ export default function DealerInfoForHeader() {
     const [creditLimit, setCreditLimit] = useState(null);
     const [error, setError] = useState(null);
     const [timestamp, setTimestamp] = useState(new Date());
+    const [dealerCategory, setDealerCatgory] = useState(null);
 
     useEffect(() => {
         const fetchCreditLimit = async () => {
@@ -21,8 +21,6 @@ export default function DealerInfoForHeader() {
                     setError("You are not authenticated. Please log in again.");
                     return;
                 }
-
-
 
                 // Make the API call to fetch the credit limit
                 const response = await axios.get(
@@ -37,6 +35,7 @@ export default function DealerInfoForHeader() {
                 // Check if the dealer is in the MDD category
                 if (response.data.success) {
                     setCreditLimit(response.data.data.creditLimit);
+                    setDealerCatgory(response.data.data.dealerCategory);
                 } else {
                     setError(response.data.message);
                 }
@@ -55,23 +54,32 @@ export default function DealerInfoForHeader() {
     }, []);
 
     return (
-        <div className="dih-main">
-            <div className="avail-limit-head">
-                <p>Available Credit Limit</p>
-            </div>
-            <div className="limit-avail">
-                {error ? (
-                    <p className="error">{error}</p>
-                ) : creditLimit !== null ? (
-                    <p>₹ {creditLimit.toLocaleString("en-IN")}</p>
-                ) : (
-                    <p>Loading...</p>
-                )}
-            </div>
-
-            <div className="date-time-limit">
-                <p>{timestamp.toLocaleDateString("en-IN")}, {timestamp.toLocaleTimeString("en-IN")}</p>
-            </div>
-        </div>
+        <>
+            {dealerCategory === 'MDD' ? (
+                <div className="dih-main">
+                    <div className="avail-limit-head">
+                        <p>Available Credit Limit</p>
+                    </div>
+                    <div className="limit-avail">
+                        {error ? (
+                            <p className="error">{error}</p>
+                        ) : creditLimit !== null ? (
+                            <p>₹ {creditLimit.toLocaleString("en-IN")}</p>
+                        ) : (
+                            <p>Loading...</p>
+                        )}
+                    </div>
+    
+                    <div className="date-time-limit">
+                        <p>{timestamp.toLocaleDateString("en-IN")}, {timestamp.toLocaleTimeString("en-IN")}</p>
+                    </div>
+                </div>
+            ) : dealerCategory === null ? (
+                <p>Loading category...</p>
+            ) : (
+                <p>You do not have access to this information.</p>
+            )}
+        </>
     );
+    
 }
