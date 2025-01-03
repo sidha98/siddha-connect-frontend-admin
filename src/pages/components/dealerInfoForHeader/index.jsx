@@ -10,12 +10,15 @@ export default function DealerInfoForHeader() {
     const [error, setError] = useState(null);
     const [timestamp, setTimestamp] = useState(new Date());
     const [dealerCategory, setDealerCatgory] = useState(null);
+    const [shopName, setShopName] = useState(null);
+    const [dealerCodeDirect, setDealerCodeDirect] = useState(null);
 
     useEffect(() => {
         const fetchCreditLimit = async () => {
             try {
                 // Retrieve the token from localStorage
                 const token = localStorage.getItem("token");
+                const shopName = localStorage.getItem("shopName");
 
                 if (!token) {
                     setError("You are not authenticated. Please log in again.");
@@ -36,6 +39,8 @@ export default function DealerInfoForHeader() {
                 if (response.data.success) {
                     setCreditLimit(response.data.data.creditLimit);
                     setDealerCatgory(response.data.data.dealerCategory);
+                    setShopName(response.data.data.shopName);
+                    setDealerCodeDirect(response.data.data.dealer_code);
                 } else {
                     setError(response.data.message);
                 }
@@ -57,9 +62,6 @@ export default function DealerInfoForHeader() {
         <>
             {dealerCategory === 'MDD' ? (
                 <div className="dih-main">
-                    <div className="avail-limit-head">
-                        <p>Available Credit Limit</p>
-                    </div>
                     <div className="limit-avail">
                         {error ? (
                             <p className="error">{error}</p>
@@ -69,9 +71,16 @@ export default function DealerInfoForHeader() {
                             <p>Loading...</p>
                         )}
                     </div>
+                    <div className="avail-limit-head">
+                        <p>Available Credit Limit</p>
+                    </div>
     
                     <div className="date-time-limit">
                         <p>{timestamp.toLocaleDateString("en-IN")}, {timestamp.toLocaleTimeString("en-IN")}</p>
+                    </div>
+
+                    <div className="dealer-name-and-code">
+                        <p>{shopName} | {dealerCodeDirect} </p>
                     </div>
                 </div>
             ) : dealerCategory === null ? (

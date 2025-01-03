@@ -1,6 +1,10 @@
-@import url('https://fonts.googleapis.com/css2?family=Anton&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Anton&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
 body{
     line-height: unset !important;
+}
+.MuiBox-root.css-jrtdnu{    
+    padding-top: 50px;
+
 }
 .dih-main{
     display: flex;
@@ -23,20 +27,30 @@ body{
         }   
     }
     .limit-avail{
+        padding-bottom: 5px;
         p{
             font-size: 1.8em;
             color: #f7501b;
-            font-family: "Anton", serif;
-            font-weight: 400;
+            font-family: "Inter", serif;
+            font-optical-sizing: auto;
             font-style: normal;
+            font-weight:    500;
 
             // font-weight: bold;
         }
     }
     .date-time-limit{
         p{
-            font-size: 0.7em;
+            font-size: 0.6em;
             color: gray;
+        }
+    }
+
+    .dealer-name-and-code{
+        padding-top: 10px;
+        p{
+            font-size: 1em;
+            color: rgb(44, 44, 44);
         }
     }
 

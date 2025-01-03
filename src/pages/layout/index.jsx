@@ -19,41 +19,73 @@ const NAVIGATION = [
 ];
 
 // Custom Header Component
+// function CustomHeader() {
+//   return (
+//     <AppBar position="static" color="primary" sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}>
+//       <Toolbar>
+//         <Box
+//           sx={{
+//             display: 'flex',
+//             flexDirection: 'column',
+//             alignItems: 'center',
+//             marginRight: 2, // Adjust spacing as needed
+//           }}
+//         >
+//           <img
+//             src={siddha_logo}
+//             alt="Siddha Corporation Logo"
+//             style={{ height: '40px' }}
+//           />
+//           <Typography variant="caption" color="inherit">
+//             Excellence in Service
+//           </Typography>
+//         </Box>
+//         <Typography variant="h6" color="inherit" noWrap>
+//           Siddha Corporation
+//         </Typography>
+//       </Toolbar>
+//     </AppBar>
+//   );
+// }
+
 function CustomHeader() {
   return (
-    <AppBar
-      position="static"
-      color="primary"
-      sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}
-    >
+    <Stack direction="row" spacing={2}>
       <Toolbar>
-        <img
-          src={siddha_logo}
-          alt="Logo"
-          style={{
-            height: '40px',
-            marginRight: '16px',
+        <Box
+          sx={{
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            marginRight: 2, // Adjust spacing as needed
           }}
-        />
+        >
+          <img
+            src=""
+            alt="Siddha Corporation Logo"
+            style={{ height: '40px' }}
+          />
+          <Typography variant="caption" color="inherit">
+            Excellence in Service
+          </Typography>
+        </Box>
         <Typography variant="h6" color="inherit" noWrap>
           Siddha Corporation
         </Typography>
       </Toolbar>
-    </AppBar>
+    <DealerInfoForHeader />
+    </Stack>
   );
 }
+
+
+
 
 // Toolbar Actions Component
 function ToolbarActions() {
   return (
     <Stack direction="row" spacing={2}>
-      {/* <Tooltip title="Search" enterDelay={1000}>
-        <IconButton aria-label="search">
-          <SearchIcon />
-        </IconButton>
-      </Tooltip> */}
       <DealerInfoForHeader />
-      {/* <ThemeSwitcher /> */}
     </Stack>
   );
 }
