@@ -6,7 +6,13 @@
     justify-content: flex-start;
     align-items: flex-start;
     flex-direction: column;
-    padding: 10px;
+    padding: 40px 10px 10px 10px;
+    overflow: hidden;
+
+    h1{
+        font-size: 2.3em;
+        color: #272727;
+    }
 
     p{
         margin-bottom: unset !important;
@@ -26,7 +32,8 @@
         display: flex;
         flex-direction: column;
         gap: 20px;
-        padding: 20px 5px 10px 5px;
+        padding: 10px 5px 10px 5px;
+        margin-top: 10px;
 
         .order-box{
             width: 100%;
