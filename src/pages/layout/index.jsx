@@ -3,19 +3,44 @@ import { Outlet } from 'react-router-dom';
 import Box from '@mui/material/Box';
 import { DashboardLayout } from '@toolpad/core/DashboardLayout';
 import { AppProvider } from '@toolpad/core/AppProvider';
-import DashboardIcon from '@mui/icons-material/Dashboard';
-import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
-import BarChartIcon from '@mui/icons-material/BarChart';
 import { AppBar, Toolbar, Typography, IconButton, Stack, Tooltip } from '@mui/material';
-// import ThemeSwitcher from '@toolpad/core/ThemeSwitcher';
-import SearchIcon from '@mui/icons-material/Search';
 import siddha_logo from '../../assets/img/siddha_corp_crop_.png';
 import DealerInfoForHeader from '../components/dealerInfoForHeader';
+import { FcInTransit, FcSmartphoneTablet, FcBusinessman, FcLock, FcComboChart, FcSalesPerformance, FcTemplate, FcGenealogy, FcNext } from "react-icons/fc";
+
 
 const NAVIGATION = [
-  { segment: 'dashboard', title: 'Dashboard', icon: <DashboardIcon /> },
-  { segment: 'products', title: 'Products', icon: <BarChartIcon /> },
-  { segment: 'orders', title: 'Orders', icon: <ShoppingCartIcon /> },
+  { segment: 'dashboard', title: 'Dashboard', icon: <FcTemplate style={{ fontSize: '24px' }} /> },
+  { segment: 'sales-dashboard', title: 'Sales Dashboard', icon: <FcComboChart style={{ fontSize: '24px' }} /> },
+  {
+    segment: 'finance-dashboard',
+    title: 'Finance Dashboard',
+    icon:  <FcSalesPerformance style={{ fontSize: '24px' }} />,
+    children: [
+      {
+        segment: 'sales',
+        title: 'Payment Calculator',
+        icon: <FcNext />,
+      },
+      {
+        segment: 'sales',
+        title: 'Credit Note',
+        icon: <FcNext />,
+      },
+      {
+        segment: 'traffic',
+        title: 'Debit Note',
+        icon: <FcNext />,
+      },
+    ],
+  },
+  { segment: 'products', title: 'Extraction Dashboard', icon: <FcGenealogy style={{ fontSize: '24px' }} /> },
+
+  { segment: 'products', title: 'Products', icon: <FcSmartphoneTablet style={{ fontSize: '24px' }} /> },
+  { segment: 'orders', title: 'Orders', icon: <FcInTransit style={{ fontSize: '24px' }} /> },
+  { segment: 'profile', title: 'Profile', icon: <FcBusinessman style={{ fontSize: '24px' }} /> },
+  { segment: 'logout', title: 'Logout', icon: <FcLock style={{ fontSize: '24px' }} /> },
+
 ];
 
 // Custom Header Component
