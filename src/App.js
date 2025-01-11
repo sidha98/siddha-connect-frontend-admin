@@ -18,6 +18,8 @@ import ProductPage from './pages/dealerDashboardFinance/orders/productPage';
 import { UserProvider } from './context/userContext';
 import Orders from './pages/orders';
 import Layout from './pages/layout';
+import TallyVouchers from './pages/tallyVouchers';
+import PaymentCalculator from './pages/paymentCalculator';
 
 
 function AppRoutes() {
@@ -55,6 +57,8 @@ function AppRoutes() {
                 <Route path="/extraction-overview" element={<ExtractionOverview />} />
                 <Route path="/extraction-graphs" element={<ExtractionGraphs />} />
                 <Route path="/extraction-model-wise" element={<ExtractionModelWise />} />
+                <Route path="/finance-dashboard/tally-vouchers" element={<TallyVouchers/>} />
+                <Route path="/finance-dashboard/payment-calculator" element={<PaymentCalculator/>} />
                 <Route path="/logout" element={<Logout />} />
             </Route>
         </Routes>

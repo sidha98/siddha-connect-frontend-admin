@@ -18,7 +18,7 @@ const NAVIGATION = [
     icon:  <FcSalesPerformance style={{ fontSize: '24px' }} />,
     children: [
       {
-        segment: 'sales',
+        segment: 'payment-calculator',
         title: 'Payment Calculator',
         icon: <FcNext />,
       },
@@ -30,6 +30,11 @@ const NAVIGATION = [
       {
         segment: 'traffic',
         title: 'Debit Note',
+        icon: <FcNext />,
+      },
+      {
+        segment: 'tally-vouchers',
+        title: 'Vouchers',
         icon: <FcNext />,
       },
     ],
