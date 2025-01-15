@@ -60,7 +60,7 @@ export default function DealerInfoForHeader() {
 
     return (
         <>
-            {dealerCategory === 'MDD' ? (
+            {dealerCategory != 'null' ? (
                 <div className="dih-main">
                     <div className="limit-avail">
                         {error ? (
