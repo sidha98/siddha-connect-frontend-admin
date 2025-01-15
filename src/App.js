@@ -18,6 +18,7 @@ import ProductPage from './pages/dealerDashboardFinance/orders/productPage';
 import { UserProvider } from './context/userContext';
 import Orders from './pages/orders';
 import Layout from './pages/layout';
+import FinanceDashBoard from './pages/components/financeDashboard';
 
 
 function AppRoutes() {
@@ -46,6 +47,8 @@ function AppRoutes() {
             >
                 {/* Child Routes */}
                 <Route path="/dealer-dashboard/finance" element={<DealerDashboardFinance />} />
+                {/* finance Dashboard */}
+               <Route path = "/finance-dashboard" element ={<FinanceDashBoard/>}/>
                 <Route path="/products" element={<ProductPage />} />
                 <Route path="/orders" element={<Orders />} />
                 <Route path="/brand-comparison" element={<BrandComparison />} />
