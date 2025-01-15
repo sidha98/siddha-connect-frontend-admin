@@ -90,7 +90,7 @@ export default function EnhancedTable() {
      console.log("response is ", response);
      const data = response.data.map((transaction) => ({
        id: transaction._id,
-       amount: parseFloat(transaction.AMOUNT), // Ensure numeric values
+       amount: parseFloat(transaction.AMOUNT), // Ensure numeric valuess
        voucher_type: transaction.VOUCHERTYPE,
        credit_note: transaction.AMOUNT > 0 ? transaction.AMOUNT : 0, // Define logic for credit_note
        debit_note: transaction.AMOUNT < 0 ? Math.abs(transaction.AMOUNT) : 0, // Define logic for debit_note
