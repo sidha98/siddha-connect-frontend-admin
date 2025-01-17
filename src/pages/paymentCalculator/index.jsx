@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useSpring, animated } from '@react-spring/web';
 import './style.scss';
 import { AwesomeButton } from 'react-awesome-button';
@@ -6,13 +6,29 @@ import AwesomeButtonStyles from 'react-awesome-button/src/styles/styles.scss';
 import { LiaCloudDownloadAltSolid } from "react-icons/lia";
 import PaymentTable from '../components/paymentTable';
 
-
-
-
 export default function PaymentCalculator() {
-  const targetAmount = 1604876.4;
+  // States to track amounts from different tables
+  const [invoiceAmounts, setInvoiceAmounts] = useState([]);
+  const [debitNoteAmounts, setDebitNoteAmounts] = useState([]);
+  const [creditNoteAmounts, setCreditNoteAmounts] = useState([]);
 
-  // Utility function to format the number according to Indian numbering system
+  // Function to calculate total amount
+  const calculateTotal = () => {
+    const invoiceAmount = invoiceAmounts.reduce((total, amount) => total -parseFloat(amount), 0) || 0;
+    const debitNoteAmount = debitNoteAmounts.reduce((total, amount) => total + parseFloat(amount), 0) || 0;
+    const creditNoteAmount = creditNoteAmounts.reduce((total, amount) => total + parseFloat(amount), 0) || 0;
+
+    return invoiceAmount + debitNoteAmount - creditNoteAmount;
+  };
+
+  // Animated value for smooth transition
+  const { number } = useSpring({
+    from: { number: 1000 },
+    to: { number: calculateTotal() },
+    config: { duration: 200 },
+  });
+
+  // Format numbers in Indian currency style
   const formatNumberIndian = (num) => {
     const [integerPart, decimalPart] = num.toFixed(2).split('.');
     const lastThreeDigits = integerPart.slice(-3);
@@ -22,15 +38,8 @@ export default function PaymentCalculator() {
     return `₹ ${formattedInteger}.${decimalPart}`;
   };
 
-  const { number } = useSpring({
-    from: { number: 0 },
-    to: { number: targetAmount },
-    config: { duration: 2000 }, // Duration of the animation (2 seconds)
-  });
-
-  // Placeholder function for downloading a document
+  // Handle download functionality
   const handleDownload = () => {
-    // Simulating a file download
     const element = document.createElement('a');
     const file = new Blob(['Payment Advice Placeholder'], { type: 'text/plain' });
     element.href = URL.createObjectURL(file);
@@ -48,37 +57,33 @@ export default function PaymentCalculator() {
         </div>
         <div className="pcal-total-main">
           <div className="total-amnt">
-            {/* Use the animated.h2 component for the animation */}
             <animated.h2>
               {number.to((n) => formatNumberIndian(n))}
             </animated.h2>
           </div>
-          {/* Button to trigger the download functionality */}
           <div className="save-adv-btn" onClick={handleDownload}>
             <AwesomeButton
-            cssModule={AwesomeButtonStyles}
-            type="primary"
-            onPress={() => {
-                // do something
-            }}>
-                <LiaCloudDownloadAltSolid style={{ fontSize: '20px' }}/>
+              cssModule={AwesomeButtonStyles}
+              type="primary"
+              onPress={() => {}}
+            >
+              <LiaCloudDownloadAltSolid style={{ fontSize: '20px' }} />
             </AwesomeButton>
-            {/* <p>Save Payment Advice</p> */}
           </div>
         </div>
         <div className="pcal-tables-main">
-            <div className="invoices-main">
-                <h3>Invoices</h3>
-                <PaymentTable />
-            </div>
-            <div className="cn-main">
-                <h3>Credit Notes</h3>
-                <PaymentTable />
-            </div>
-            <div className="dn-main">
-                <h3>Debit Notes</h3>
-                <PaymentTable />
-            </div>
+          <div className="invoices-main">
+            <h3>Invoices</h3>
+            <PaymentTable voucherTypes={['Sales', 'SalesD2D', 'Sales DMS']} onAmountsUpdate={setInvoiceAmounts} />
+          </div>
+          <div className="cn-main">
+            <h3>Credit Notes</h3>
+            <PaymentTable voucherTypes={['Credit Note', 'Receipt', 'Sales Return Credit Note', 'Purchase Visiblity']} onAmountsUpdate={setCreditNoteAmounts} />
+          </div>
+          <div className="dn-main">
+            <h3>Debit Notes</h3>
+            <PaymentTable voucherTypes={['Payment', 'Debit Note']} onAmountsUpdate={setDebitNoteAmounts} />
+          </div>
         </div>
       </div>
     </>
