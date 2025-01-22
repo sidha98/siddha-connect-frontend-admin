@@ -198,6 +198,9 @@ const lineChartOptions = {
     <div className="dashboard">
       {/* Cards */}
       <div className="dashboard_all_box">
+        <div className="finance-heading">
+          <h1>Finance Dashboard</h1>
+        </div>
         <div className="dashboard-box">
           <div className="dashboard-header">
             <h3>Total Credit Limit</h3>

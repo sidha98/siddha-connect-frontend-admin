@@ -31,7 +31,7 @@ function Login() {
       localStorage.setItem("token", response.data.token);
       
       if (role === "dealer"){
-        navigate("/dealer-dashboard/finance")
+        navigate("/finance-dashboard")
       } else {
         navigate("/extraction-overview")
       }
