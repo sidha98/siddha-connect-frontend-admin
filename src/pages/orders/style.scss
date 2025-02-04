@@ -109,17 +109,41 @@
                 gap: 20px;
 
                 .order-products{
-                    width: 32.5%;
+                    // width: 26%;
+                    width: fit-content;
+                    // min-width: 20em;
+                    min-width: calc(83vw / 5);
                     display: flex;
-                    justify-content: space-between;
-                    border: 1px solid #80808070;
+                    // justify-content: space-between;
+                    gap: 10px;
+                    // border: 1px solid #80808070;
+                    box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
                     border-radius: 5px;
-                    padding: 20px 10px 20px 10px;
+                    padding: 10px 10px 10px 10px;
+
                     // box-shadow: rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px;
 
                     .order-products-left{
                         display: flex;
                         flex-direction: column;
+                        // width: 25%;
+                        border-radius: 10%;
+                        overflow: hidden;
+
+                        img{
+                            width: 4.2em;
+                            height: auto;
+                        }
+
+
+                    }
+                    .order-products-right{
+                        height: 100%;
+                        // width: 70%;
+                        display: flex;
+                        flex-direction: column;
+                        justify-content: flex-start;
+                        align-items: flex-start;
 
                         p.product-name{
                             font-size: 1em;
@@ -129,17 +153,15 @@
                         p.product-price{
                             font-size: 0.7em;
                         }
-                    }
-                    .order-products-right{
-                        height: 100%;
-                        display: flex;
-                        justify-content: flex-end;
-                        align-items: flex-end;
+                        p.product-code{
+                            font-size: 0.7em;
+                        }
 
                         p.order-total{
                             font-size: 1em;
                             font-weight: bold;
                             color: #5e5e5e;
+                            margin-top: 5px;
 
                         }
                     }

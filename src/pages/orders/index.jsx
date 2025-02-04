@@ -3,6 +3,8 @@ import axios from "axios";
 import config from "../../config";
 import "./style.scss";
 import { jwtDecode } from "jwt-decode";
+import samsung_logo from "../../assets/img/samsung-square.png";
+
 
 const { backend_url } = config;
 
@@ -149,7 +151,7 @@ const Orders = () => {
             <div key={order._id} className="order-box">
                 <div className="order-dets-top">
                     <div className="order-dets-top-left">
-                    <p>{order._id}</p>
+                    <p>Order Id: {order._id}</p>
                     <p className="order-tot-qt">{order.Products.reduce((total, product) => total + product.Quantity, 0)}N | {new Intl.NumberFormat('en-IN', { maximumFractionDigits: 2 }).format(order.TotalPrice)} INR</p>
                     <p className="order-date">{new Date(order.OrderDate).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })} | {new Date(order.OrderDate).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })}</p>
                     <div className={`order-status ${order.OrderStatus.toLowerCase()}`}>
@@ -169,14 +171,18 @@ const Orders = () => {
                     {order.Products.map((product) => (
                     <div key={product._id} className="order-products">
                         <div className="order-products-left">
+                          <img src={samsung_logo} alt="" />
+                        </div>
+                        <div className="order-products-right">
                         <p className="product-name">
-                            {product.Model} | {product.ProductCode}
+                            {product.Model}
+                        </p>
+                        <p className="product-code">
+                          {product.ProductCode}
                         </p>
                         <p className="product-price">
                         {product.Quantity} x {new Intl.NumberFormat('en-IN').format(product.Price)} INR
                         </p>
-                        </div>
-                        <div className="order-products-right">
                         <p className="order-total">
                         {new Intl.NumberFormat('en-IN', { maximumFractionDigits: 2 }).format(
                             product.Quantity * product.Price
