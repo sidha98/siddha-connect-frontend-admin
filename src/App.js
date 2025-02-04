@@ -22,7 +22,7 @@ import FinanceDashBoard from './pages/components/financeDashboard';
 import TallyVouchers from './pages/tallyVouchers';
 import PaymentCalculator from './pages/paymentCalculator';
 import { HelmetProvider, Helmet } from "react-helmet-async";
-
+import { ToastContainer } from 'react-toastify';
 
 function AppRoutes() {
     const location = useLocation();
@@ -83,6 +83,8 @@ function App() {
                 <UserProvider>
                     <Router>
                         <AppRoutes />
+                        <ToastContainer /> 
+
                     </Router>
                 </UserProvider>
             </AuthProvider>

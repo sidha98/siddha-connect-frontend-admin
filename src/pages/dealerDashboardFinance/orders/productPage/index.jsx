@@ -5,12 +5,13 @@ import { Navigate, useNavigate } from "react-router-dom";
 import "./style.scss"; // Add custom CSS for styling
 import samsung_logo from "../../../../assets/img/samsung logo.png";
 import config from "../../../../config";
-import { FaShoppingCart } from "react-icons/fa";
+import { FaShoppingCart,FaBoxOpen } from "react-icons/fa";
 import box_icon from "../../../../assets/img/package.png";
 import { AiFillDelete } from "react-icons/ai";
 import { TiDelete } from "react-icons/ti";
 import { UserContext } from "../../../../context/userContext";
 import { jwtDecode } from "jwt-decode";
+import { toast } from "react-toastify";
 
 const { backend_url } = config;
 
@@ -56,14 +57,25 @@ const ProductPage = () => {
 
   // Add to Cart functionality
   const addToCart = (product, quantity) => {
-    const existingProduct = cart.find((item) => item._id === product._id);
-    if (existingProduct) {
-      existingProduct.quantity += quantity;
-      setCart([...cart]);
-    } else {
-      setCart([...cart, { ...product, quantity }]);
-    }
-  };
+   const existingProduct = cart.find((item) => item._id === product._id);
+   if (existingProduct) {
+     existingProduct.quantity += quantity;
+     setCart([...cart]);
+   } else {
+     setCart([...cart, { ...product, quantity }]);
+   }
+   
+   toast.success(`${product.Model} added to cart!`, {
+     position: "top-right",
+     autoClose: 2000,
+     hideProgressBar: false,
+     closeOnClick: true,
+     pauseOnHover: true,
+     draggable: true,
+   });
+ 
+   console.log("added to cart");
+ };
 
   // Remove item from cart
   const removeFromCart = (productId) => {
@@ -163,37 +175,40 @@ const ProductPage = () => {
     <div className="products-page">
       {/* Filters Section */}
       <div className="filters sticky-filters">
-        <input
-          type="text"
-          placeholder="Search"
-          value={query}
-          onChange={(e) => setQuery(e.target.value)}
-        />
-        <select value={segment} onChange={(e) => setSegment(e.target.value)}>
-          <option value="">All Segments</option>
-          <option value="6-10K">6-10K</option>
-          <option value="10-15K">10-15K</option>
-        </select>
-        <select value={category} onChange={(e) => setCategory(e.target.value)}>
-          <option value="">All Categories</option>
-          <option value="smartphone">Smartphones</option>
-          <option value="tab">Tablets</option>
-          <option value="wearable">Wearable</option>
-        </select>
-        <input
-          type="number"
-          placeholder="Min Price"
-          value={minPrice}
-          onChange={(e) => setMinPrice(e.target.value)}
-        />
-        <input
-          type="number"
-          placeholder="Max Price"
-          value={maxPrice}
-          onChange={(e) => setMaxPrice(e.target.value)}
-        />
-        <button onClick={resetFilters}>Reset Filters</button>
-      </div>
+  <input
+    type="text"
+    placeholder="🔍 Search..."
+    value={query}
+    onChange={(e) => setQuery(e.target.value)}
+  />
+  <select value={segment} onChange={(e) => setSegment(e.target.value)}>
+    <option value="">All Segments</option>
+    <option value="6-10K">6-10K</option>
+    <option value="10-15K">10-15K</option>
+  </select>
+  <select value={category} onChange={(e) => setCategory(e.target.value)}>
+    <option value="">All Categories</option>
+    <option value="smartphone">Smartphones</option>
+    <option value="tab">Tablets</option>
+    <option value="wearable">Wearable</option>
+  </select>
+  <input
+    type="number"
+    placeholder="💰 Min Price"
+    value={minPrice}
+    onChange={(e) => setMinPrice(e.target.value)}
+  />
+  <input
+    type="number"
+    placeholder="💰 Max Price"
+    value={maxPrice}
+    onChange={(e) => setMaxPrice(e.target.value)}
+  />
+  <button onClick={resetFilters}>
+    Reset
+  </button>
+</div>
+
 
         <div className="products-container">
         {products.map((product) => (
@@ -212,10 +227,12 @@ const ProductPage = () => {
             <div className="product-info">
                 <h3 className="product-name">{product.Model}</h3>
                 <p className="product-details">
-                Code: {product.ProductCode} <br />
+                 {product.ProductCode} <br />
                 Price: {product.Price} INR
                 </p>
                 <div className="quantity-container">
+                <span className="qty-label">Qty:</span>
+
                 <input
                     type="number"
                     defaultValue={1}
@@ -229,7 +246,7 @@ const ProductPage = () => {
                     onClick={() => addToCart(product, product.quantity || 1)}
                     className="add-to-order-btn"
                 >
-                    Add to Order
+                   <FaShoppingCart size={20} />
                 </button>
                 </div>
             </div>
@@ -312,3 +329,4 @@ const ProductPage = () => {
 };
 
 export default ProductPage;
+
