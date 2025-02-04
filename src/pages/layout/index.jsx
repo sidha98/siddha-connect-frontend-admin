@@ -10,46 +10,47 @@ import { FcInTransit, FcSmartphoneTablet, FcBusinessman, FcLock, FcComboChart, F
 
 
 const NAVIGATION = [
-  { segment: 'dashboard', title: 'Dashboard', icon: <FcTemplate style={{ fontSize: '24px' }} /> },
-  { segment: 'sales-dashboard', title: 'Sales Dashboard', icon: <FcComboChart style={{ fontSize: '24px' }} /> },
   {
     segment: 'finance-dashboard',
     title: 'Finance Dashboard',
     icon:  <FcSalesPerformance style={{ fontSize: '24px' }} />,
-    children: [
-      {
-        segment: '',
-        title: 'Home',
-        icon: <FcNext />,
-      },
-      {
-        segment: 'payment-calculator',
-        title: 'Payment Calculator',
-        icon: <FcNext />,
-      },
-      {
-        segment: 'sales',
-        title: 'Credit Note',
-        icon: <FcNext />,
-      },
-      {
-        segment: 'traffic',
-        title: 'Debit Note',
-        icon: <FcNext />,
-      },
-      {
-        segment: 'tally-vouchers',
-        title: 'Vouchers',
-        icon: <FcNext />,
-      },
-    ],
+    // children: [
+    //   {
+    //     segment: '',
+    //     title: 'Home',
+    //     icon: <FcNext />,
+    //   },
+    //   {
+    //     segment: 'payment-calculator',
+    //     title: 'Payment Calculator',
+    //     icon: <FcNext />,
+    //   },
+    //   {
+    //     segment: 'sales',
+    //     title: 'Credit Note',
+    //     icon: <FcNext />,
+    //   },
+    //   {
+    //     segment: 'traffic',
+    //     title: 'Debit Note',
+    //     icon: <FcNext />,
+    //   },
+    //   {
+    //     segment: 'tally-vouchers',
+    //     title: 'Vouchers',
+    //     icon: <FcNext />,
+    //   },
+    // ],
   },
-  { segment: 'products', title: 'Extraction Dashboard', icon: <FcGenealogy style={{ fontSize: '24px' }} /> },
-
   { segment: 'products', title: 'Products', icon: <FcSmartphoneTablet style={{ fontSize: '24px' }} /> },
   { segment: 'orders', title: 'Orders', icon: <FcInTransit style={{ fontSize: '24px' }} /> },
-  { segment: 'profile', title: 'Profile', icon: <FcBusinessman style={{ fontSize: '24px' }} /> },
+  { segment: 'payment-calculator', title: 'Payment Calculator', icon: <FcTemplate style={{ fontSize: '24px' }} /> },
   { segment: 'logout', title: 'Logout', icon: <FcLock style={{ fontSize: '24px' }} /> },
+
+  // { segment: 'sales-dashboard', title: 'Sales Dashboard', icon: <FcComboChart style={{ fontSize: '24px' }} /> },
+  // { segment: 'products', title: 'Extraction Dashboard', icon: <FcGenealogy style={{ fontSize: '24px' }} /> },
+
+  // { segment: 'profile', title: 'Profile', icon: <FcBusinessman style={{ fontSize: '24px' }} /> },
 
 ];
 

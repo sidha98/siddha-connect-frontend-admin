@@ -21,6 +21,7 @@ import Layout from './pages/layout';
 import FinanceDashBoard from './pages/components/financeDashboard';
 import TallyVouchers from './pages/tallyVouchers';
 import PaymentCalculator from './pages/paymentCalculator';
+import { HelmetProvider, Helmet } from "react-helmet-async";
 
 
 function AppRoutes() {
@@ -61,7 +62,7 @@ function AppRoutes() {
                 <Route path="/extraction-graphs" element={<ExtractionGraphs />} />
                 <Route path="/extraction-model-wise" element={<ExtractionModelWise />} />
                 <Route path="/finance-dashboard/tally-vouchers" element={<TallyVouchers/>} />
-                <Route path="/finance-dashboard/payment-calculator" element={<PaymentCalculator/>} />
+                <Route path="/payment-calculator" element={<PaymentCalculator/>} />
                 <Route path="/logout" element={<Logout />} />
             </Route>
         </Routes>
@@ -71,13 +72,21 @@ function AppRoutes() {
 
 function App() {
     return (
-        <AuthProvider>
-            <UserProvider>
-                <Router>
-                    <AppRoutes />
-                </Router>
-            </UserProvider>
-        </AuthProvider>
+        <HelmetProvider>
+            <Helmet>
+                <title>Siddha Connect</title>
+                <meta name="description" content="Siddha Connect | Developed by White Cinette" />
+                <link rel="icon" type="image/png" href="/sc-favicon.png" />
+            </Helmet>
+
+            <AuthProvider>
+                <UserProvider>
+                    <Router>
+                        <AppRoutes />
+                    </Router>
+                </UserProvider>
+            </AuthProvider>
+        </HelmetProvider>
     );
 }
 
