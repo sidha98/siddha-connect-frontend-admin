@@ -151,6 +151,7 @@ const Orders = () => {
             <div key={order._id} className="order-box">
                 <div className="order-dets-top">
                     <div className="order-dets-top-left">
+                    <p>Order/{order.OrderNumber}</p>
                     <p>Order Id: {order._id}</p>
                     <p className="order-tot-qt">{order.Products.reduce((total, product) => total + product.Quantity, 0)}N | {new Intl.NumberFormat('en-IN', { maximumFractionDigits: 2 }).format(order.TotalPrice)} INR</p>
                     <p className="order-date">{new Date(order.OrderDate).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })} | {new Date(order.OrderDate).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })}</p>
