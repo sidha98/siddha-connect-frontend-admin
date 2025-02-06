@@ -1,5 +1,5 @@
 // App.js
-import React from 'react';
+import React, { useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import { AuthProvider } from '../src/context/AuthContext'; // Import the Auth context
 import Dashboard from './pages/dashboard';
@@ -71,6 +71,9 @@ function AppRoutes() {
 
 
 function App() {
+    useEffect(() => {
+        document.documentElement.setAttribute('toolpad-color-scheme-dark', 'light');
+    }, []);
     return (
         <HelmetProvider>
             <Helmet>

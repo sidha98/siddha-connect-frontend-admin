@@ -87,7 +87,7 @@ const NAVIGATION = [
 function CustomHeader() {
   return (
     <Stack direction="row" spacing={2}>
-      <Toolbar>
+      <Toolbar sx={{ zIndex: 950 }}>
         <Box
           sx={{
             display: 'flex',
@@ -109,7 +109,7 @@ function CustomHeader() {
           Siddha Corporation
         </Typography>
       </Toolbar>
-    <DealerInfoForHeader />
+      <DealerInfoForHeader />
     </Stack>
   );
 }
@@ -140,20 +140,24 @@ function SidebarFooter({ mini }) {
 
 export default function Layout() {
   return (
-    <AppProvider 
-    branding={{
-      logo: <img src={siddha_logo} alt="MUI logo" />,
-      title: <>
-      </>,
-      homeUrl: '/toolpad/core/introduction',
-    }}
-    navigation={NAVIGATION}>
+    <AppProvider
+      branding={{
+        logo: <img src={siddha_logo} alt="MUI logo" />,
+        title: <></>,
+        homeUrl: '/toolpad/core/introduction',
+      }}
+      navigation={NAVIGATION}
+    >
       <DashboardLayout
         defaultSidebarCollapsed
+        sx={{
+          '& .MuiDrawer-root': { zIndex: 900 }, // Reduce sidebar z-index
+          '& .MuiAppBar-root': { zIndex: 950 }, // Reduce header z-index
+        }}
         slots={{
-          header: CustomHeader, // Use custom header
-          toolbarActions: ToolbarActions, // Add toolbar actions
-          sidebarFooter: SidebarFooter, // Custom footer for the sidebar
+          header: CustomHeader,
+          toolbarActions: ToolbarActions,
+          sidebarFooter: SidebarFooter,
         }}
       >
         <Box sx={{ p: 3 }}>

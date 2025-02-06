@@ -1,11 +1,11 @@
 import React, { useState, useEffect, useContext } from "react";
 import axios from "axios";
 import Modal from "react-modal";
-import { Navigate, useNavigate } from "react-router-dom";
-import "./style.scss"; // Add custom CSS for styling
+import { useNavigate } from "react-router-dom";
+import "./style.scss";
 import samsung_logo from "../../../../assets/img/samsung logo.png";
+import samsungRect from "../../../../assets/img/samsung-rect.png";
 import config from "../../../../config";
-import { FaShoppingCart,FaBoxOpen } from "react-icons/fa";
 import box_icon from "../../../../assets/img/package.png";
 import { AiFillDelete } from "react-icons/ai";
 import { TiDelete } from "react-icons/ti";
@@ -15,7 +15,7 @@ import { toast } from "react-toastify";
 
 const { backend_url } = config;
 
-Modal.setAppElement("#root"); // Set the app root for accessibility
+Modal.setAppElement("#root");
 
 const ProductPage = () => {
   const [products, setProducts] = useState([]);
@@ -26,20 +26,32 @@ const ProductPage = () => {
   const [maxPrice, setMaxPrice] = useState("");
   const [cart, setCart] = useState([]);
   const [isCartOpen, setIsCartOpen] = useState(false);
+
   const { user } = useContext(UserContext);
   const navigate = useNavigate();
 
+  useEffect(() => {
+    try {
+      const storedCart = localStorage.getItem("cart");
+      if (storedCart) {
+        setCart(JSON.parse(storedCart));
+      }
+    } catch (error) {
+      console.error("Failed to load cart from localStorage:", error);
+      localStorage.removeItem("cart");
+    }
+  }, []);
 
-  // Fetch products from API
+  useEffect(() => {
+    if (cart.length > 0) {
+      localStorage.setItem("cart", JSON.stringify(cart));
+    } else {
+      localStorage.removeItem("cart");
+    }
+  }, [cart]);
+
   const fetchProducts = async () => {
     try {
-      console.log("Filters being sent:", {
-        query,
-        segment,
-        category,
-        minPrice,
-        maxPrice,
-      });
       const response = await axios.post(`${backend_url}/product/dealer/all`, {
         query: query?.trim() || undefined,
         segment: segment || undefined,
@@ -48,41 +60,35 @@ const ProductPage = () => {
         maxPrice: maxPrice ? parseFloat(maxPrice) : undefined,
         status: "live",
       });
-      console.log("Response from API:", response.data);
       setProducts(response.data.products || []);
     } catch (error) {
       console.error("Error fetching products:", error);
     }
   };
 
-  // Add to Cart functionality
   const addToCart = (product, quantity) => {
-   const existingProduct = cart.find((item) => item._id === product._id);
-   if (existingProduct) {
-     existingProduct.quantity += quantity;
-     setCart([...cart]);
-   } else {
-     setCart([...cart, { ...product, quantity }]);
-   }
-   
-   toast.success(`${product.Model} added to cart!`, {
-     position: "top-right",
-     autoClose: 2000,
-     hideProgressBar: false,
-     closeOnClick: true,
-     pauseOnHover: true,
-     draggable: true,
-   });
- 
-   console.log("added to cart");
- };
+    const existingProductIndex = cart.findIndex((item) => item._id === product._id);
 
-  // Remove item from cart
-  const removeFromCart = (productId) => {
-    setCart(cart.filter((item) => item._id !== productId));
+    if (existingProductIndex !== -1) {
+      const updatedCart = [...cart];
+      updatedCart[existingProductIndex].quantity += quantity;
+      setCart(updatedCart);
+    } else {
+      setCart([...cart, { ...product, quantity }]);
+    }
+
+    toast.success(`${product.Model} added to cart!`);
   };
 
-  // Reset Filters
+  const removeFromCart = (productId) => {
+    const updatedCart = cart.filter((item) => item._id !== productId);
+    setCart(updatedCart);
+  };
+
+  const emptyCart = () => {
+    setCart([]);
+  };
+
   const resetFilters = () => {
     setQuery("");
     setSegment("");
@@ -91,6 +97,7 @@ const ProductPage = () => {
     setMaxPrice("");
     fetchProducts();
   };
+
   const increaseQuantity = (id) => {
     const updatedCart = cart.map((item) =>
       item._id === id ? { ...item, quantity: item.quantity + 1 } : item
@@ -107,155 +114,134 @@ const ProductPage = () => {
     setCart(updatedCart);
   };
 
-    // Create Order
-    const handlePlaceOrder = async () => {
-        if (cart.length === 0) {
-          alert("Your cart is empty!");
-          return;
-        }
-      
-        try {
-          // Retrieve the token from localStorage
-          const token = localStorage.getItem("token");
-      
-          if (!token) {
-            alert("You are not authenticated. Please log in again.");
-            return;
-          }
-      
-          // Decode the token to extract dealer information
-          const decodedToken = jwtDecode(token);
-          const dealerCode = decodedToken.dealerCode;
-          const dealerName = decodedToken.shopName;
-      
-          if (!dealerCode || !dealerName) {
-            alert("Invalid dealer information in token. Please contact support.");
-            return;
-          }
-      
-          // Prepare products data for the order
-          const productsForOrder = cart.map((item) => ({
-            ProductId: item._id,
-            Quantity: item.quantity,
-            Price: item.Price,
-          }));
-      
-          // Make the API call to create the order
-          const response = await axios.post(
-            `${backend_url}/dealer/create-order`,
-            {
-              DealerCode: dealerCode,
-              DealerName: dealerName,
-              products: productsForOrder,
-            },
-            {
-              headers: {
-                Authorization: `Bearer ${token}`, // Include the token in the Authorization header
-              },
-            }
-          );
-      
-          alert("Order placed successfully!");
-          setCart([]);
-          setIsCartOpen(false);
-          navigate("/orders");
-        } catch (error) {
-          console.error("Error placing order:", error.message || error.response?.data || error);
-          alert("Failed to place order. Please try again.");
-        }
-      };
-      
+  const handlePlaceOrder = async () => {
+    if (cart.length === 0) {
+      alert("Your cart is empty!");
+      return;
+    }
 
-  // Fetch products whenever filters change
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        alert("You are not authenticated. Please log in again.");
+        return;
+      }
+
+      const decodedToken = jwtDecode(token);
+      const dealerCode = decodedToken.dealerCode;
+      const dealerName = decodedToken.shopName;
+
+      if (!dealerCode || !dealerName) {
+        alert("Invalid dealer information in token. Please contact support.");
+        return;
+      }
+
+      const productsForOrder = cart.map((item) => ({
+        ProductId: item._id,
+        Quantity: item.quantity,
+        Price: item.Price,
+      }));
+
+      await axios.post(
+        `${backend_url}/dealer/create-order`,
+        {
+          DealerCode: dealerCode,
+          DealerName: dealerName,
+          products: productsForOrder,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      alert("Order placed successfully!");
+      setCart([]);
+      setIsCartOpen(false);
+      navigate("/orders");
+    } catch (error) {
+      console.error("Error placing order:", error.message || error);
+      alert("Failed to place order. Please try again.");
+    }
+  };
+
   useEffect(() => {
     fetchProducts();
   }, [query, segment, category, minPrice, maxPrice]);
 
   return (
     <div className="products-page">
-      {/* Filters Section */}
       <div className="filters sticky-filters">
-  <input
-    type="text"
-    placeholder="🔍 Search..."
-    value={query}
-    onChange={(e) => setQuery(e.target.value)}
-  />
-  <select value={segment} onChange={(e) => setSegment(e.target.value)}>
-    <option value="">All Segments</option>
-    <option value="6-10K">6-10K</option>
-    <option value="10-15K">10-15K</option>
-  </select>
-  <select value={category} onChange={(e) => setCategory(e.target.value)}>
-    <option value="">All Categories</option>
-    <option value="smartphone">Smartphones</option>
-    <option value="tab">Tablets</option>
-    <option value="wearable">Wearable</option>
-  </select>
-  <input
-    type="number"
-    placeholder="💰 Min Price"
-    value={minPrice}
-    onChange={(e) => setMinPrice(e.target.value)}
-  />
-  <input
-    type="number"
-    placeholder="💰 Max Price"
-    value={maxPrice}
-    onChange={(e) => setMaxPrice(e.target.value)}
-  />
-  <button onClick={resetFilters}>
-    Reset
-  </button>
-</div>
+        <input
+          type="text"
+          placeholder="🔍 Search..."
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
+        />
+        <select value={segment} onChange={(e) => setSegment(e.target.value)}>
+          <option value="">All Segments</option>
+          <option value="6-10K">6-10K</option>
+          <option value="10-15K">10-15K</option>
+        </select>
+        <select value={category} onChange={(e) => setCategory(e.target.value)}>
+          <option value="">All Categories</option>
+          <option value="smartphone">Smartphones</option>
+          <option value="tab">Tablets</option>
+          <option value="wearable">Wearable</option>
+        </select>
+        <input
+          type="number"
+          placeholder="💰 Min Price"
+          value={minPrice}
+          onChange={(e) => setMinPrice(e.target.value)}
+        />
+        <input
+          type="number"
+          placeholder="💰 Max Price"
+          value={maxPrice}
+          onChange={(e) => setMaxPrice(e.target.value)}
+        />
+        <button onClick={resetFilters}>Reset</button>
+      </div>
 
-
-        <div className="products-container">
+      <div className="products-container">
         {products.map((product) => (
-            <div key={product._id} className="product-card">
+          <div key={product._id} className="product-card">
             <div className="product-image-wrapper">
-                <img
-                src={samsung_logo}
-                alt={`${product.Model} Logo`}
-                className="product-logo"
-                />
-                <span className="category-tag">
-                {product.Category.charAt(0).toUpperCase() +
-                    product.Category.slice(1)}
-                </span>
+              <img src={samsungRect} alt={`${product.Model} Logo`} className="product-logo" />
             </div>
             <div className="product-info">
-                <h3 className="product-name">{product.Model}</h3>
-                <p className="product-details">
-                 {product.ProductCode} <br />
+              <h3 className="product-name">{product.Model}</h3>
+              <p className="product-details">
+                {product.ProductCode} <br />
                 Price: {product.Price} INR
-                </p>
-                <div className="quantity-container">
+              </p>
+              <div className="quantity-container">
                 <span className="qty-label">Qty:</span>
-
                 <input
-                    type="number"
-                    defaultValue={1}
-                    min={1}
-                    onChange={(e) => {
+                  type="number"
+                  defaultValue={1}
+                  min={1}
+                  onChange={(e) => {
                     product.quantity = parseInt(e.target.value) || 1;
-                    }}
-                    className="quantity-input"
+                  }}
+                  className="quantity-input"
                 />
                 <button
-                    onClick={() => addToCart(product, product.quantity || 1)}
-                    className="add-to-order-btn"
+                  onClick={() => addToCart(product, product.quantity || 1)}
+                  className="add-to-order-btn"
                 >
-                   <FaShoppingCart size={20} />
+                  Add To Cart
                 </button>
-                </div>
+              </div>
             </div>
-            </div>
+          </div>
         ))}
-        </div>
+      </div>
 
-      {/* Floating Cart Icon */}
       <div className="floating-cart" onClick={() => setIsCartOpen(true)}>
+        <div className="box-icon">
           <img src={box_icon} alt="" />
           <div className="cart-count">
             {cart.reduce((total, item) => total + item.quantity, 0)}
@@ -277,13 +263,9 @@ const ProductPage = () => {
                 <div className="cart-item-info">
                   <span className="cart-item-name">{item.Model}</span>
                   <div className="cart-quantity-control">
-                    <button onClick={() => decreaseQuantity(item._id)}>
-                      -
-                    </button>
+                    <button onClick={() => decreaseQuantity(item._id)}>-</button>
                     <span className="cart-quantity">{item.quantity}</span>
-                    <button onClick={() => increaseQuantity(item._id)}>
-                      +
-                    </button>
+                    <button onClick={() => increaseQuantity(item._id)}>+</button>
                   </div>
                   <span className="cart-item-price">
                     {item.Price} INR per unit = {item.Price * item.quantity} INR
@@ -309,10 +291,14 @@ const ProductPage = () => {
               {cart.reduce(
                 (total, item) => total + item.Price * item.quantity,
                 0
-              )}{" "}
-              INR
+              )} INR
             </div>
-            <button className="place-order-btn" onClick={handlePlaceOrder}>Place Order</button>
+            <button className="place-order-btn" onClick={handlePlaceOrder}>
+              Place Order
+            </button>
+            <button className="Empty-cart-btn" onClick={emptyCart}>
+              Empty Cart
+            </button>
           </div>
         )}
 
@@ -328,4 +314,3 @@ const ProductPage = () => {
 };
 
 export default ProductPage;
-
