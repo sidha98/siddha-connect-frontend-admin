@@ -30,39 +30,39 @@ const Orders = () => {
       const queryParams = new URLSearchParams({
         ...(startDate && { startDate }),
         ...(endDate && { endDate }),
-        ...(search && { search }),  
+        ...(search && { search }),
         ...(status && { status }),
       }).toString();
 
-        // Retrieve the token from localStorage
-        const token = localStorage.getItem("token");
-    
-        if (!token) {
-            alert("You are not authenticated. Please log in again.");
-            return;
+      // Retrieve the token from localStorage
+      const token = localStorage.getItem("token");
+
+      if (!token) {
+        alert("You are not authenticated. Please log in again.");
+        return;
+      }
+
+      // Decode the token to extract dealer information
+      const decodedToken = jwtDecode(token);
+
+
+
+      const response = await axios.post(
+        `${backend_url}/dealer/orders`,
+        {
+          // Request body content goes here (if any)
+          startDate: "",
+          endDate: "",
+          search: "",
+          status: "",
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`, // Correct placement of Authorization header
+          },
         }
-    
-        // Decode the token to extract dealer information
-        const decodedToken = jwtDecode(token);
+      );
 
-
-
-        const response = await axios.post(
-            `${backend_url}/dealer/orders`,
-            {
-              // Request body content goes here (if any)
-              startDate: "",
-              endDate: "",
-              search: "",
-              status: "",
-            },
-            {
-              headers: {
-                Authorization: `Bearer ${token}`, // Correct placement of Authorization header
-              },
-            }
-          );
-          
 
       setOrders(response.data.orders || []);
     } catch (err) {
@@ -99,43 +99,44 @@ const Orders = () => {
 
   return (
     <div className="orders-main">
-      <h1>Orders</h1>
+      <div className="orders-header">
+        <h1>Orders</h1>
 
-      {/* Filters Section */}
-      <div className="filters">
-        <input
-          type="date"
-          name="startDate"
-          value={filters.startDate}
-          onChange={handleFilterChange}
-          placeholder="Start Date"
-        />
-        <input
-          type="date"
-          name="endDate"
-          value={filters.endDate}
-          onChange={handleFilterChange}
-          placeholder="End Date"
-        />
-        <input
-          type="text"
-          name="search"
-          value={filters.search}
-          onChange={handleFilterChange}
-          placeholder="Search"
-        />
-        <select
-          name="status"
-          value={filters.status}
-          onChange={handleFilterChange}
-        >
-          <option value="">All Statuses</option>
-          <option value="pending">Pending</option>
-          <option value="completed">Completed</option>
-        </select>
-        <button onClick={resetFilters}>Reset Filters</button>
+        {/* Filters Section */}
+        <div className="filters">
+          <input
+            type="date"
+            name="startDate"
+            value={filters.startDate}
+            onChange={handleFilterChange}
+            placeholder="Start Date"
+          />
+          <input
+            type="date"
+            name="endDate"
+            value={filters.endDate}
+            onChange={handleFilterChange}
+            placeholder="End Date"
+          />
+          <input
+            type="text"
+            name="search"
+            value={filters.search}
+            onChange={handleFilterChange}
+            placeholder="Search"
+          />
+          <select
+            name="status"
+            value={filters.status}
+            onChange={handleFilterChange}
+          >
+            <option value="">All Statuses</option>
+            <option value="pending">Pending</option>
+            <option value="completed">Completed</option>
+          </select>
+          <button onClick={resetFilters}>Reset Filters</button>
+        </div>
       </div>
-
       {/* Orders Table */}
       {loading ? (
         <p>Loading...</p>
@@ -144,61 +145,65 @@ const Orders = () => {
       ) : orders.length === 0 ? (
         <p>No orders found.</p>
       ) : (
-    <>
-    <div className="orders-sub">
+        <>
+          <div className="orders-sub">
 
-        {orders.map((order) => (
-            <div key={order._id} className="order-box">
+            {orders.map((order) => (
+              <div key={order._id} className="order-box">
                 <div className="order-dets-top">
-                    <div className="order-dets-top-left">
-                    <p>Order/{order.OrderNumber}</p>
+                  <div className="order-dets-top-left">
+                    <div className="order-dets-top-right">
+                      <div>
+                        <p>Order/{order.OrderNumber}</p>
+                      </div>
+                      <div className="order-actions">
+                        {order.OrderStatus.toUpperCase() === "PENDING" && (
+                          <>
+                            <a className="edit" href="">Edit</a>
+                            <a className="delete" href="">Delete</a>
+                          </>
+                        )}
+                      </div>
+                    </div>
                     <p>Order Id: {order._id}</p>
                     <p className="order-tot-qt">{order.Products.reduce((total, product) => total + product.Quantity, 0)}N | {new Intl.NumberFormat('en-IN', { maximumFractionDigits: 2 }).format(order.TotalPrice)} INR</p>
                     <p className="order-date">{new Date(order.OrderDate).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })} | {new Date(order.OrderDate).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })}</p>
                     <div className={`order-status ${order.OrderStatus.toLowerCase()}`}>
-                        {order.OrderStatus.toUpperCase()}
+                      {order.OrderStatus.toUpperCase()}
                     </div>
-                    </div>
-                        <div className="order-dets-top-right">
-                        {order.OrderStatus.toUpperCase() === "PENDING" && (
-                                <>
-                                <a href="">Edit</a>
-                                <a href="">Delete</a>
-                                </>
-                            )}
-                        </div>
+                  </div>
                 </div>
                 <div className="order-dets-bottom">
-                    {order.Products.map((product) => (
+                  {order.Products.map((product) => (
                     <div key={product._id} className="order-products">
-                        <div className="order-products-left">
-                          <img src={samsung_logo} alt="" />
-                        </div>
-                        <div className="order-products-right">
+                      <div className="order-products-left">
+                        <img src={samsung_logo} alt="" />
+                      </div>
+                      <div className="order-products-right">
                         <p className="product-name">
-                            {product.Model}
+                          {product.Model}
                         </p>
                         <p className="product-code">
                           {product.ProductCode}
                         </p>
                         <p className="product-price">
-                        {product.Quantity} x {new Intl.NumberFormat('en-IN').format(product.Price)} INR
+                          {product.Quantity} x {new Intl.NumberFormat('en-IN').format(product.Price)} INR
                         </p>
                         <p className="order-total">
-                        {new Intl.NumberFormat('en-IN', { maximumFractionDigits: 2 }).format(
+                          {new Intl.NumberFormat('en-IN', { maximumFractionDigits: 2 }).format(
                             product.Quantity * product.Price
-                        )} INR
+                          )} INR
                         </p>
-                        </div>
+                      </div>
                     </div>
-                    ))}
+                  ))}
                 </div>
-            </div>
-        ))}
+              </div>
+            ))}
 
 
-    </div>
-    </>
+          </div>
+        </>
 
       )}
     </div>
