@@ -256,7 +256,6 @@ const ProductPage = () => {
 
       {/* Floating Cart Icon */}
       <div className="floating-cart" onClick={() => setIsCartOpen(true)}>
-        <div className="box-icon">
           <img src={box_icon} alt="" />
           <div className="cart-count">
             {cart.reduce((total, item) => total + item.quantity, 0)}
