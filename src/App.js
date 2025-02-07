@@ -71,9 +71,7 @@ function AppRoutes() {
 
 
 function App() {
-    useEffect(() => {
-        document.documentElement.setAttribute('toolpad-color-scheme-dark', 'light');
-    }, []);
+    
     return (
         <HelmetProvider>
             <Helmet>
